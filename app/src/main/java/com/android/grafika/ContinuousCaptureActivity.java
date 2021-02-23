@@ -20,6 +20,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -62,7 +63,7 @@ public class ContinuousCaptureActivity extends Activity implements SurfaceHolder
 
     private static final int VIDEO_WIDTH = 1280;  // dimensions for 720p video
     private static final int VIDEO_HEIGHT = 720;
-    private static final int DESIRED_PREVIEW_FPS = 15;
+    private static final int DESIRED_PREVIEW_FPS = 30;
 
     private EglCore mEglCore;
     private WindowSurface mDisplaySurface;
@@ -173,7 +174,7 @@ public class ContinuousCaptureActivity extends Activity implements SurfaceHolder
         mHandler = new MainHandler(this);
         mHandler.sendEmptyMessageDelayed(MainHandler.MSG_BLINK_TEXT, 1500);
 
-        mOutputFile = new File(getFilesDir(), "continuous-capture.mp4");
+        mOutputFile = new File(Environment.getExternalStorageDirectory(), "continuous-capture.mp4");
         mSecondsOfVideo = 0.0f;
         updateControls();
     }
@@ -241,7 +242,7 @@ public class ContinuousCaptureActivity extends Activity implements SurfaceHolder
         int numCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numCameras; i++) {
             Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 mCamera = Camera.open(i);
                 break;
             }
@@ -275,10 +276,10 @@ public class ContinuousCaptureActivity extends Activity implements SurfaceHolder
         AspectFrameLayout layout = (AspectFrameLayout) findViewById(R.id.continuousCapture_afl);
 
         Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-
+        Log.i(TAG, "display rotation : " + display.getRotation());
         if(display.getRotation() == Surface.ROTATION_0) {
-            mCamera.setDisplayOrientation(90);
-            layout.setAspectRatio((double) cameraPreviewSize.height / cameraPreviewSize.width);
+//            mCamera.setDisplayOrientation(90);
+            layout.setAspectRatio((double) cameraPreviewSize.width / cameraPreviewSize.height);
         } else if(display.getRotation() == Surface.ROTATION_270) {
             layout.setAspectRatio((double) cameraPreviewSize.height / cameraPreviewSize.width);
             mCamera.setDisplayOrientation(180);
