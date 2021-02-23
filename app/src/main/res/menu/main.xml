@@ -14,19 +14,22 @@
      limitations under the License.
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/regenerateContent_item"
         android:onClick="clickRegenerateContent"
         android:orderInCategory="90"
         android:showAsAction="never"
+        tools:ignore="AppCompatResource"
         android:title="@string/regenerateContent_item"/>
         
     <item
         android:id="@+id/about_item"
         android:orderInCategory="100"
         android:showAsAction="never"
+        tools:ignore="AppCompatResource"
         android:title="@string/about_item"
         android:onClick="clickAbout" />
     
